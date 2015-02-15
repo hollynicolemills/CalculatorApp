@@ -1,7 +1,7 @@
 /** 
 Author: Holly Mills
 Creation Date: Feb. 14, 2015
-Last Edited: Feb. 14, 2015
+Last Edited: Feb. 15, 2015
 Description: Basic calculator using add, subtract, multiply and divide 
 Notes: First GUI program using Swing
 */
@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 
-public class CalculatorApp {
+public class CalculatorApp2 {
 
 	JButton one, two, three, four, five, six, seven, 
 		eight, nine, dot, zero, addition, subtract, multiply, divide, equals, clear;
@@ -22,23 +22,30 @@ public class CalculatorApp {
 	double num2 = 0.0;
 	double result = 0.0;
 	char operation = 'n';
-	boolean shouldFill = true;
 	
 	DecimalFormat formater = new DecimalFormat("0.##########");
 	
 	public static void main(String[] args) {
-		CalculatorApp gui = new CalculatorApp();
+		CalculatorApp2 gui = new CalculatorApp2();
 		gui.go();
 	}
 	
 	public void go() {
 		JFrame frame = new JFrame("Calculator");
 		JPanel pane = new JPanel();
-
+		JPanel topPane = new JPanel();
+		JPanel leftPane = new JPanel();
+		JPanel bottomPane = new JPanel();
+		
+		//Set Layouts 
+		pane.setLayout(new GridLayout(4,4,2,2));
+		leftPane.setLayout( new GridLayout(4,1,2,2));
+		bottomPane.setLayout( new GridLayout(1,1,2,2));
+		
 		//Create TextBox
 		textBox = new JTextField(20);
 		
-		//Create Buttons
+	//Create Buttons
 		one = new JButton(" 1 ");
 		two = new JButton(" 2 ");
 		three = new JButton(" 3 ");
@@ -56,31 +63,27 @@ public class CalculatorApp {
 		divide = new JButton(" / ");
 		equals = new JButton(" = "); 
 		clear = new JButton("clear");
-
+		
 		//create active listeners
-		one.addActionListener(new ButtonOne());
-		two.addActionListener(new ButtonTwo());
-		three.addActionListener(new ButtonThree());
-		four.addActionListener(new ButtonFour());
-		five.addActionListener(new ButtonFive());
-		six.addActionListener(new ButtonSix());
-		seven.addActionListener(new ButtonSeven());
-		eight.addActionListener(new ButtonEight());
-		nine.addActionListener(new ButtonNine());
-		dot.addActionListener(new DotButton());
-		zero.addActionListener(new ButtonZero());
-		addition.addActionListener(new AdditionButton());
-		subtract.addActionListener(new SubtractButton());
-		multiply.addActionListener(new MultiplyButton());
-		divide.addActionListener(new DivideButton());
+		one.addActionListener(new NumberButton());
+		two.addActionListener(new NumberButton());
+		three.addActionListener(new NumberButton());
+		four.addActionListener(new NumberButton());
+		five.addActionListener(new NumberButton());
+		six.addActionListener(new NumberButton());
+		seven.addActionListener(new NumberButton());
+		eight.addActionListener(new NumberButton());
+		nine.addActionListener(new NumberButton());
+		dot.addActionListener(new NumberButton());
+		zero.addActionListener(new NumberButton());
+		addition.addActionListener(new OperationButton());
+		subtract.addActionListener(new OperationButton());
+		multiply.addActionListener(new OperationButton());
+		divide.addActionListener(new OperationButton());
 		equals.addActionListener(new EqualsButton());
 		clear.addActionListener(new ClearButton());
 		
-		//Create layout
-		frame.getContentPane().add(BorderLayout.NORTH, textBox);
-		frame.getContentPane().add(BorderLayout.CENTER, pane);
-		
-		//Add content to center panel
+		//Add content to panels
 		pane.add(one);
 		pane.add(two);
 		pane.add(three); 
@@ -92,115 +95,76 @@ public class CalculatorApp {
 		pane.add(nine);
 		pane.add(dot);
 		pane.add(zero);
-		pane.add(addition);
-		pane.add(subtract);
-		pane.add(multiply);
-		pane.add(divide);
-		pane.add(clear);
 		pane.add(equals);
 		
+		leftPane.add(addition);
+		leftPane.add(subtract);
+		leftPane.add(multiply);
+		leftPane.add(divide);
+		
+		bottomPane.add(clear);
+		
+		//Create layout
+		frame.getContentPane().add(BorderLayout.NORTH, textBox);
+		frame.getContentPane().add(BorderLayout.CENTER, pane);
+		frame.getContentPane().add(BorderLayout.EAST, leftPane);
+		frame.getContentPane().add(BorderLayout.SOUTH, bottomPane);
+		
 		//Set sizes and defaults
-		frame.setSize(275, 290);
+		frame.setSize(250, 260);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 		
-		//Create inner classes for active listeners
-	class ButtonOne implements ActionListener {
+	class NumberButton implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
+			if (event.getSource() == one){
 			textBox.setText(textBox.getText() + "1");
-		}
-	}
-		
-	class ButtonTwo implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+			} else if (event.getSource() == two){
 			textBox.setText(textBox.getText() + "2");
-		}
-	}
-		
-	class ButtonThree implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+			} else if (event.getSource() == 3) {
 			textBox.setText(textBox.getText() + "3");
-		}
-	}
-		
-	class ButtonFour implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+			} else if (event.getSource() == four){
 			textBox.setText(textBox.getText() + "4");
-		}
-	}
-	
-	class ButtonFive implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+			} else if (event.getSource() == five){
 			textBox.setText(textBox.getText() + "5");
-		}
-	}
-	
-	class ButtonSix implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+			} else if (event.getSource() == six){
 			textBox.setText(textBox.getText() + "6");
-		}
-	}
-	
-	class ButtonSeven implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+			} else if (event.getSource() == seven){
 			textBox.setText(textBox.getText() + "7");
-		}
-	}
-	
-	class ButtonEight implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+			} else if (event.getSource() == eight){
 			textBox.setText(textBox.getText() + "8");
-		}
-	}
-	
-	class ButtonNine implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+			} else if (event.getSource() == nine){
 			textBox.setText(textBox.getText() + "9");
-		}
-	}
-	
-	class DotButton implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			textBox.setText(textBox.getText() + ".");
-		}
-	}
-	
-	class ButtonZero implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
+			} else if (event.getSource() == zero){
 			textBox.setText(textBox.getText() + "0");
+			} else if (event.getSource() == dot){
+			textBox.setText(textBox.getText() + ".");
+			} else
+			textBox.setText("0");
 		}
 	}
 	
-	class AdditionButton implements ActionListener {
+	class OperationButton implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			num1 = Double.parseDouble(textBox.getText());
-			textBox.setText("");
-			operation = 'a';
-		}
-	}
-	
-	class SubtractButton implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			num1 = Double.parseDouble(textBox.getText());
-			textBox.setText("");
-			operation = 's';
-		}
-	}
-	
-	class MultiplyButton implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			num1 = Double.parseDouble(textBox.getText());
-			textBox.setText("");
-			operation = 'm';
-		}
-	}
-	
-	class DivideButton implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			num1 = Double.parseDouble(textBox.getText());
-			textBox.setText("");
-			operation = 'd';
+			if (event.getSource() == addition) {
+				num1 = Double.parseDouble(textBox.getText());
+				textBox.setText("");
+				operation = 'a';
+			} else if (event.getSource() == subtract) {
+				num1 = Double.parseDouble(textBox.getText());
+				textBox.setText("");
+				operation = 's';
+			} else if (event.getSource() == multiply) {
+				num1 = Double.parseDouble(textBox.getText());
+				textBox.setText("");
+				operation = 'm';
+			} else if (event.getSource() == divide) {
+				num1 = Double.parseDouble(textBox.getText());
+				textBox.setText("");
+				operation = 'd';
+			} else 
+				textBox.setText("0");
 		}
 	}
 
@@ -216,7 +180,7 @@ public class CalculatorApp {
 				} else if(operation == 'd'){
 					result = num1 / num2;
 				} else
-					result = 0;
+					result = 0.0;
 			
 			textBox.setText(formater.format(result));
 		}
