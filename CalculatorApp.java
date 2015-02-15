@@ -22,6 +22,7 @@ public class CalculatorApp {
 	double num2 = 0.0;
 	double result = 0.0;
 	char operation = 'n';
+	boolean shouldFill = true;
 	
 	DecimalFormat formater = new DecimalFormat("0.##########");
 	
@@ -33,7 +34,7 @@ public class CalculatorApp {
 	public void go() {
 		JFrame frame = new JFrame("Calculator");
 		JPanel pane = new JPanel();
-				
+
 		//Create TextBox
 		textBox = new JTextField(20);
 		
@@ -79,13 +80,10 @@ public class CalculatorApp {
 		frame.getContentPane().add(BorderLayout.NORTH, textBox);
 		frame.getContentPane().add(BorderLayout.CENTER, pane);
 		
-		//Set layout to BoxLayout
-		//pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-		
-		//Add content to panel
+		//Add content to center panel
 		pane.add(one);
 		pane.add(two);
-		pane.add(three);
+		pane.add(three); 
 		pane.add(four);
 		pane.add(five);
 		pane.add(six);
@@ -94,15 +92,15 @@ public class CalculatorApp {
 		pane.add(nine);
 		pane.add(dot);
 		pane.add(zero);
-		pane.add(addition); 
+		pane.add(addition);
 		pane.add(subtract);
 		pane.add(multiply);
 		pane.add(divide);
-		pane.add(equals);
 		pane.add(clear);
+		pane.add(equals);
 		
 		//Set sizes and defaults
-		frame.setSize(260, 290);
+		frame.setSize(275, 290);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
