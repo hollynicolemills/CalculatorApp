@@ -138,7 +138,7 @@ public class CalculatorApp {
 			textBox.setText(textBox.getText() + "1");
 			} else if (event.getSource() == two){
 			textBox.setText(textBox.getText() + "2");
-			} else if (event.getSource() == 3) {
+			} else if (event.getSource() == three) {
 			textBox.setText(textBox.getText() + "3");
 			} else if (event.getSource() == four){
 			textBox.setText(textBox.getText() + "4");
