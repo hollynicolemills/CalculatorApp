@@ -28,7 +28,7 @@ import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.lang.Math;
 
-public class CalculatorApp2 {
+public class CalculatorApp {
 
 	JButton one, two, three, four, five, six, seven, 
 		eight, nine, dot, zero, addition, subtract,
@@ -44,7 +44,7 @@ public class CalculatorApp2 {
 	DecimalFormat formater = new DecimalFormat("0.##########");
 	
 	public static void main(String[] args) {
-		CalculatorApp2 gui = new CalculatorApp2();
+		CalculatorApp gui = new CalculatorApp();
 		gui.go();
 	}
 	
