@@ -2,7 +2,7 @@
 Author: Holly Mills
 Creation Date: Feb. 14, 2015
 Last Edited: Feb. 15, 2015
-Description: Basic calculator using add, subtract, multiply and divide 
+Description: Basic calculator with GUI
 
  CalculatorApp
     Copyright (C) 2015  Holly Mills
