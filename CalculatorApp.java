@@ -26,11 +26,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.text.DecimalFormat;
+import java.lang.Math;
 
 public class CalculatorApp2 {
 
 	JButton one, two, three, four, five, six, seven, 
-		eight, nine, dot, zero, addition, subtract, multiply, divide, equals, clear;
+		eight, nine, dot, zero, addition, subtract,
+	 	multiply, divide, equals, clear;
 	
 	JTextField textBox;
 	
@@ -55,13 +57,13 @@ public class CalculatorApp2 {
 		
 		//Set Layouts 
 		pane.setLayout(new GridLayout(4,4,2,2));
-		leftPane.setLayout( new GridLayout(4,1,2,2));
+		leftPane.setLayout( new GridLayout(4,2,2,2));
 		bottomPane.setLayout( new GridLayout(1,1,2,2));
 		
 		//Create TextBox
 		textBox = new JTextField(20);
 		
-	//Create Buttons
+		//Create Buttons
 		one = new JButton(" 1 ");
 		two = new JButton(" 2 ");
 		three = new JButton(" 3 ");
@@ -112,12 +114,10 @@ public class CalculatorApp2 {
 		pane.add(dot);
 		pane.add(zero);
 		pane.add(equals);
-		
 		leftPane.add(addition);
 		leftPane.add(subtract);
 		leftPane.add(multiply);
 		leftPane.add(divide);
-		
 		bottomPane.add(clear);
 		
 		//Create layout
@@ -127,7 +127,7 @@ public class CalculatorApp2 {
 		frame.getContentPane().add(BorderLayout.SOUTH, bottomPane);
 		
 		//Set sizes and defaults
-		frame.setSize(250, 260);
+		frame.setSize(250,225);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -163,30 +163,33 @@ public class CalculatorApp2 {
 	
 	class OperationButton implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			if (event.getSource() == addition) {
+			if (textBox.getText().length() > 0)
 				num1 = Double.parseDouble(textBox.getText());
-				textBox.setText("");
+			else
+				num1 = 0;
+			
+			textBox.setText("");
+			
+			if (event.getSource() == addition) {
 				operation = 'a';
 			} else if (event.getSource() == subtract) {
-				num1 = Double.parseDouble(textBox.getText());
-				textBox.setText("");
 				operation = 's';
 			} else if (event.getSource() == multiply) {
-				num1 = Double.parseDouble(textBox.getText());
-				textBox.setText("");
 				operation = 'm';
 			} else if (event.getSource() == divide) {
-				num1 = Double.parseDouble(textBox.getText());
-				textBox.setText("");
 				operation = 'd';
 			} else 
-				textBox.setText("0");
+				textBox.setText("0");//need better solution here
 		}
 	}
 
 	class EqualsButton implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			num2 = Double.parseDouble(textBox.getText());
+				if(textBox.getText().length() > 0)
+				num2 = Double.parseDouble(textBox.getText());
+				else
+				num2 = 0;
+				
 				if(operation == 'a') {
 					result = num1 + num2;
 				} else if(operation == 's'){
@@ -195,9 +198,11 @@ public class CalculatorApp2 {
 					result = num1 * num2;
 				} else if(operation == 'd'){
 					result = num1 / num2;
+				} else if(operation == 'S'){
+					result = Math.sin(num1);
 				} else
 					result = 0.0;
-			
+					
 			textBox.setText(formater.format(result));
 		}
 	}
@@ -208,3 +213,4 @@ public class CalculatorApp2 {
 		}
 	}
 }
+
