@@ -1,7 +1,7 @@
 /** 
 Author: Holly Mills
 Creation Date: Feb. 14, 2015
-Last Edited: Feb. 15, 2015
+Last Edited: Feb. 16, 2015
 Description: Ver. 3 uses CreateButton class to simplify code and
 		also uses getActionEvent() to identify button being pressed
 		can accept multiple inputs
