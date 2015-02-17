@@ -121,34 +121,34 @@ public class CalculatorGUI {
 			numHolder = "0";
 			String button = event.getActionCommand();
 				
-				result = evaluator.evaluate(result, nextNum, assign);
+			result = evaluator.evaluate(result, nextNum, assign);
 	
-				if (event.getActionCommand() == " + ") {
-					displayBox.setText(displayBox.getText() + button);
-					assign = 'a';
-				} else if (event.getActionCommand() == " - ") {
-					displayBox.setText(displayBox.getText() + button);
-					assign = 's';
-				} else if (event.getActionCommand() == " * ") {
-					displayBox.setText(displayBox.getText() + button);
-					assign = 'm';
-				} else if (event.getActionCommand() == " / ") {
-					displayBox.setText(displayBox.getText() + button);
-					assign = 'd';
-				} else if (event.getActionCommand() == "sin(x)") {
-					displayBox.setText(displayBox.getText() + "sin(");
-					assign = 'S';	
-				} else if (event.getActionCommand() == "cos(x)") {
-					displayBox.setText(displayBox.getText() + "cos(");
-					assign = 'C';	
-				} else if (event.getActionCommand() == "tan(x)") {
-					displayBox.setText(displayBox.getText() + "tan(");
-					assign = 'T';	
-				} else if (event.getActionCommand() == "sqrt") {
-					displayBox.setText(displayBox.getText() + "sqrt(");
-					assign = 'r';				
-				} else 
-					assign = 'n';	
+			if (event.getActionCommand() == " + ") {
+				displayBox.setText(displayBox.getText() + button);
+				assign = 'a';
+			} else if (event.getActionCommand() == " - ") {
+				displayBox.setText(displayBox.getText() + button);
+				assign = 's';
+			} else if (event.getActionCommand() == " * ") {
+				displayBox.setText(displayBox.getText() + button);
+				assign = 'm';
+			} else if (event.getActionCommand() == " / ") {
+				displayBox.setText(displayBox.getText() + button);
+				assign = 'd';
+			} else if (event.getActionCommand() == "sin(x)") {
+				displayBox.setText(displayBox.getText() + "sin(");
+				assign = 'S';	
+			} else if (event.getActionCommand() == "cos(x)") {
+				displayBox.setText(displayBox.getText() + "cos(");
+				assign = 'C';	
+			} else if (event.getActionCommand() == "tan(x)") {
+				displayBox.setText(displayBox.getText() + "tan(");
+				assign = 'T';	
+			} else if (event.getActionCommand() == "sqrt") {
+				displayBox.setText(displayBox.getText() + "sqrt(");
+				assign = 'r';				
+			} else 
+				assign = 'n';	
 		}
 	}
 
