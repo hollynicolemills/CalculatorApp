@@ -106,9 +106,7 @@ public class CalculatorGUI {
 	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 		
-    class NumberButton implements ActionListener {
-	String button;
-		
+    class NumberButton implements ActionListener {		
 	public void actionPerformed(ActionEvent event) {
 	    button = event.getActionCommand();
 	    numHolder = numHolder + button;
@@ -144,7 +142,7 @@ public class CalculatorGUI {
 	    } else if (button == "tan(x)") {
 		displayBox.setText(displayBox.getText() + "tan(");
 		assign = 'T';	
-	    } else if (event.getActionCommand() == "sqrt") {
+	    } else if (button == "sqrt") {
 		displayBox.setText(displayBox.getText() + "sqrt(");
 		assign = 'r';				
 	    } else 
@@ -156,7 +154,7 @@ public class CalculatorGUI {
 	public void actionPerformed(ActionEvent event) {
 	    nextNum = Double.parseDouble(numHolder);	
 	    numHolder = "0";
-	    String button = event.getActionCommand();
+	    button = event.getActionCommand();
 	    result = evaluator.evaluate(result, nextNum, assign);
 	    displayBox.setText(displayBox.getText() + button + formater.format(result));	
 	}
