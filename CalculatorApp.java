@@ -2,7 +2,10 @@
 Author: Holly Mills
 Creation Date: Feb. 14, 2015
 Last Edited: Feb. 15, 2015
-Description: Basic calculator with GUI
+Description: Ver. 3 uses CreateButton class to simplify code and
+		also uses getActionEvent() to identify button being pressed
+		can accept multiple inputs
+		still doesn't know order of operations
 
  CalculatorApp
     Copyright (C) 2015  Holly Mills
@@ -28,189 +31,144 @@ import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.lang.Math;
 
-public class CalculatorApp {
+public class CalculatorApp3 {
 
-	JButton one, two, three, four, five, six, seven, 
+	CreateButton one, two, three, four, five, six, seven, 
 		eight, nine, dot, zero, addition, subtract,
-	 	multiply, divide, equals, clear;
+	 	multiply, divide, equals, clear,
+	 	sine, cosine, tangent, sqrt;
+	 	
+	Calculator evaluator;
+
+	JTextField textBox, displayBox;
 	
-	JTextField textBox;
-	
-	double num1 = 0.0;
-	double num2 = 0.0;
+	double nextNum = 0.0;
 	double result = 0.0;
-	char operation = 'n';
+	boolean first = true;
+	char assign = 'n';
+	String numHolder = "0";
 	
 	DecimalFormat formater = new DecimalFormat("0.##########");
 	
 	public static void main(String[] args) {
-		CalculatorApp gui = new CalculatorApp();
+		CalculatorApp3 gui = new CalculatorApp3();
 		gui.go();
 	}
-	
+
 	public void go() {
 		JFrame frame = new JFrame("Calculator");
-		JPanel pane = new JPanel();
-		JPanel topPane = new JPanel();
+		JPanel centerPane = new JPanel();
 		JPanel leftPane = new JPanel();
 		JPanel bottomPane = new JPanel();
 		
 		//Set Layouts 
-		pane.setLayout(new GridLayout(4,4,2,2));
+		centerPane.setLayout(new GridLayout(4,4,2,2));
 		leftPane.setLayout( new GridLayout(4,2,2,2));
 		bottomPane.setLayout( new GridLayout(1,1,2,2));
 		
 		//Create TextBox
-		textBox = new JTextField(20);
+		displayBox = new JTextField(20);
 		
-		//Create Buttons
-		one = new JButton(" 1 ");
-		two = new JButton(" 2 ");
-		three = new JButton(" 3 ");
-		four = new JButton(" 4 ");
-		five = new JButton(" 5 ");
-		six = new JButton(" 6 ");
-		seven = new JButton(" 7 ");
-		eight = new JButton(" 8 ");
-		nine = new JButton(" 9 ");
-		dot = new JButton(" . ");
-		zero = new JButton(" 0 ");
-		addition = new JButton(" + ");
-		subtract = new JButton(" - ");
-		multiply = new JButton(" * ");
-		divide = new JButton(" / ");
-		equals = new JButton(" = "); 
-		clear = new JButton("clear");
-		
-		//create active listeners
-		one.addActionListener(new NumberButton());
-		two.addActionListener(new NumberButton());
-		three.addActionListener(new NumberButton());
-		four.addActionListener(new NumberButton());
-		five.addActionListener(new NumberButton());
-		six.addActionListener(new NumberButton());
-		seven.addActionListener(new NumberButton());
-		eight.addActionListener(new NumberButton());
-		nine.addActionListener(new NumberButton());
-		dot.addActionListener(new NumberButton());
-		zero.addActionListener(new NumberButton());
-		addition.addActionListener(new OperationButton());
-		subtract.addActionListener(new OperationButton());
-		multiply.addActionListener(new OperationButton());
-		divide.addActionListener(new OperationButton());
-		equals.addActionListener(new EqualsButton());
-		clear.addActionListener(new ClearButton());
-		
-		//Add content to panels
-		pane.add(one);
-		pane.add(two);
-		pane.add(three); 
-		pane.add(four);
-		pane.add(five);
-		pane.add(six);
-		pane.add(seven);
-		pane.add(eight);
-		pane.add(nine);
-		pane.add(dot);
-		pane.add(zero);
-		pane.add(equals);
-		leftPane.add(addition);
-		leftPane.add(subtract);
-		leftPane.add(multiply);
-		leftPane.add(divide);
-		bottomPane.add(clear);
+		evaluator = new Calculator();
+
+		one = new CreateButton("1", new NumberButton(), centerPane);
+		two = new CreateButton("2", new NumberButton(), centerPane);
+		three = new CreateButton("3", new NumberButton(), centerPane);
+		four = new CreateButton("4", new NumberButton(), centerPane);
+		five = new CreateButton("5", new NumberButton(), centerPane);
+		six = new CreateButton("6", new NumberButton(), centerPane);
+		seven = new CreateButton("7", new NumberButton(), centerPane);
+		eight = new CreateButton("8", new NumberButton(), centerPane);
+		nine = new CreateButton("9", new NumberButton(), centerPane);
+		dot = new CreateButton(".", new NumberButton(), centerPane);
+		zero = new CreateButton("0", new NumberButton(), centerPane);
+		equals = new CreateButton(" = ", new EqualsButton(), centerPane);
+		addition = new CreateButton(" + ", new OperationButton(), leftPane);
+		sine = new CreateButton("sin(x)", new OperationButton(), leftPane);
+		subtract = new CreateButton(" - ", new OperationButton(), leftPane);
+		cosine = new CreateButton("cos(x)", new OperationButton(), leftPane);
+		multiply = new CreateButton(" * ", new OperationButton(), leftPane);
+		tangent = new CreateButton("tan(x)", new OperationButton(), leftPane);
+		divide = new CreateButton("/", new OperationButton(), leftPane);
+		sqrt = new CreateButton("sqrt", new OperationButton(), leftPane);
+		clear = new CreateButton("clear", new ClearButton(), bottomPane);
 		
 		//Create layout
-		frame.getContentPane().add(BorderLayout.NORTH, textBox);
-		frame.getContentPane().add(BorderLayout.CENTER, pane);
+		frame.getContentPane().add(BorderLayout.NORTH, displayBox);
+		frame.getContentPane().add(BorderLayout.CENTER, centerPane);
 		frame.getContentPane().add(BorderLayout.EAST, leftPane);
 		frame.getContentPane().add(BorderLayout.SOUTH, bottomPane);
 		
 		//Set sizes and defaults
-		frame.setSize(250,225);
+		frame.setSize(350,225);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 		
 	class NumberButton implements ActionListener {
+		String button;
+		
 		public void actionPerformed(ActionEvent event) {
-			if (event.getSource() == one){
-			textBox.setText(textBox.getText() + "1");
-			} else if (event.getSource() == two){
-			textBox.setText(textBox.getText() + "2");
-			} else if (event.getSource() == three) {
-			textBox.setText(textBox.getText() + "3");
-			} else if (event.getSource() == four){
-			textBox.setText(textBox.getText() + "4");
-			} else if (event.getSource() == five){
-			textBox.setText(textBox.getText() + "5");
-			} else if (event.getSource() == six){
-			textBox.setText(textBox.getText() + "6");
-			} else if (event.getSource() == seven){
-			textBox.setText(textBox.getText() + "7");
-			} else if (event.getSource() == eight){
-			textBox.setText(textBox.getText() + "8");
-			} else if (event.getSource() == nine){
-			textBox.setText(textBox.getText() + "9");
-			} else if (event.getSource() == zero){
-			textBox.setText(textBox.getText() + "0");
-			} else if (event.getSource() == dot){
-			textBox.setText(textBox.getText() + ".");
-			} else
-			textBox.setText("0");
+			button = event.getActionCommand();
+			numHolder = numHolder + button;
+			displayBox.setText(displayBox.getText() + button);
 		}
 	}
 	
 	class OperationButton implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			if (textBox.getText().length() > 0)
-				num1 = Double.parseDouble(textBox.getText());
-			else
-				num1 = 0;
-			
-			textBox.setText("");
-			
-			if (event.getSource() == addition) {
-				operation = 'a';
-			} else if (event.getSource() == subtract) {
-				operation = 's';
-			} else if (event.getSource() == multiply) {
-				operation = 'm';
-			} else if (event.getSource() == divide) {
-				operation = 'd';
-			} else 
-				textBox.setText("0");//need better solution here
+			nextNum = Double.parseDouble(numHolder);
+			numHolder = "0";
+			String button = event.getActionCommand();
+				
+				result = evaluator.evaluate(result, nextNum, assign);
+	
+				if (event.getActionCommand() == " + ") {
+					displayBox.setText(displayBox.getText() + button);
+					assign = 'a';
+				} else if (event.getActionCommand() == " - ") {
+					displayBox.setText(displayBox.getText() + button);
+					assign = 's';
+				} else if (event.getActionCommand() == " * ") {
+					displayBox.setText(displayBox.getText() + button);
+					assign = 'm';
+				} else if (event.getActionCommand() == " / ") {
+					displayBox.setText(displayBox.getText() + button);
+					assign = 'd';
+				} else if (event.getActionCommand() == "sin(x)") {
+					displayBox.setText(displayBox.getText() + "sin(");
+					assign = 'S';	
+				} else if (event.getActionCommand() == "cos(x)") {
+					displayBox.setText(displayBox.getText() + "cos(");
+					assign = 'C';	
+				} else if (event.getActionCommand() == "tan(x)") {
+					displayBox.setText(displayBox.getText() + "tan(");
+					assign = 'T';	
+				} else if (event.getActionCommand() == "sqrt") {
+					displayBox.setText(displayBox.getText() + "sqrt(");
+					assign = 'r';				
+				} else 
+					assign = 'n';	
 		}
 	}
 
 	class EqualsButton implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-				if(textBox.getText().length() > 0)
-				num2 = Double.parseDouble(textBox.getText());
-				else
-				num2 = 0;
-				
-				if(operation == 'a') {
-					result = num1 + num2;
-				} else if(operation == 's'){
-					result = num1 - num2;
-				} else if(operation == 'm'){
-					result = num1 * num2;
-				} else if(operation == 'd'){
-					result = num1 / num2;
-				} else if(operation == 'S'){
-					result = Math.sin(num1);
-				} else
-					result = 0.0;
-					
-			textBox.setText(formater.format(result));
+			nextNum = Double.parseDouble(numHolder);	
+			numHolder = "0";
+			String button = event.getActionCommand();
+			result = evaluator.evaluate(result, nextNum, assign);
+			displayBox.setText(displayBox.getText() + button + formater.format(result));	
 		}
 	}
 	
 	class ClearButton implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			textBox.setText("");
+			displayBox.setText("");
+			numHolder = "0";
+			first = true;
 		}
 	}
 }
+
 
