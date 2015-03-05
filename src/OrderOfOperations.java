@@ -1,9 +1,49 @@
+
 import java.util.Stack;
 import java.util.Scanner;
 
 public class OrderOfOperations {
-	String token = "";
-	
+	private String token = "";
+    private String exception = "";
+    
+    public String getException (){
+        return exception;
+    }
+    
+    public boolean checkInput (String in){
+        int open = 0;
+        int closed = 0;
+        int opCount = 0;
+        int numCount = 0;
+        boolean valid = true;
+        
+        Scanner reader = new Scanner(in);
+            
+        while (reader.hasNext()){
+            token = reader.next();
+            if (token.equals("("))
+                open++;
+            if (token.equals(")"))
+                closed++;
+            if (isNumber(token))
+                numCount++;
+            if (isOperator(token))
+                opCount++;
+        }
+        
+        if (open != closed){
+            valid = false;
+            exception = "Error: unbalanced parenthesis";
+        }
+        
+        if (numCount <= opCount){
+            valid = false;
+            exception = "Error: unbalanced expression";
+        }
+
+        return valid;
+    }
+    
 	public double readInput (String exp){
 		Scanner input = new Scanner(exp);
 		Stack<Double> num = new Stack<Double>();
@@ -16,22 +56,35 @@ public class OrderOfOperations {
 			} else if (token.equals("(")){
 				op.push(token);
 			} else if (token.equals(")")){
-				while(!op.peek().equals("("))
-					num.push(evaluate(op.pop(), num.pop(), num.pop()));
+                while(!op.peek().equals("(")){
+                    if (op.peek().equals("sqrt")){
+                        num.push(Math.sqrt(num.pop()));
+                        op.pop();
+                    } else
+                        num.push(evaluate(op.pop(), num.pop(), num.pop()));
+                }
 				op.pop();
 			} else {
 				while(!op.empty() && hasPrecedence(token, op.peek())){
-					num.push(evaluate(op.pop(), num.pop(), num.pop()));
+                    if (op.peek().equals("sqrt")){
+                        num.push(Math.sqrt(num.pop()));
+                        op.pop();
+                    } else
+                        num.push(evaluate(op.pop(), num.pop(), num.pop()));
 				} op.push(token);
 			} 
 		}
 	
 		while (!op.empty()) {
-			num.push(evaluate(op.pop(), num.pop(), num.pop())); 
+            if (op.peek().equals("sqrt")){
+                num.push(Math.sqrt(num.pop()));
+                op.pop();
+            } else
+                num.push(evaluate(op.pop(), num.pop(), num.pop()));
 		} return num.pop();
 	}
 	
-	public static boolean isNumber (String exp){
+	private static boolean isNumber (String exp){
 		if (exp.startsWith("0"))
 			return true;
 		else if (exp.startsWith("1"))
@@ -55,8 +108,22 @@ public class OrderOfOperations {
 		else
 			return false;
 	}
+    
+    private static boolean isOperator (String exp){
+        if (exp.equals("+"))
+            return true;
+        else if (exp.equals("-"))
+            return true;
+        else if (exp.equals("*"))
+            return true;
+        else if (exp.equals("/"))
+            return true;
+        else
+            return false;
+            
+    }
 
-	public static boolean hasPrecedence(String op1, String op2)
+	private static boolean hasPrecedence(String op1, String op2)
     {
         if (op2.equals("(") || op2.equals(")"))
             return false;
@@ -66,11 +133,15 @@ public class OrderOfOperations {
             return false;
         if (op1.equals("^") && (op2.equals("-") || op2.equals("+")))
             return false;
+        if (op1.equals("sqrt") && (op2.equals("/") || op2.equals("*")))
+            return false;
+        if (op1.equals("sqrt") && (op2.equals("-") || op2.equals("+")))
+            return false;
         else
             return true;
     }
  
- 	public static double evaluate (String operation, double num2, double num1) {
+ 	private static double evaluate (String operation, double num2, double num1) {
 		
 		if(operation.equals("+")) {
 			num1 = num1 + num2;
@@ -80,9 +151,8 @@ public class OrderOfOperations {
 			num1 = num1 * num2;
 		} else if(operation.equals("/")){
 			num1 = num1 / num2;
-    } else if(operation.equals("^")){
-      num1 = Math.pow(num1, num2);
+        	} else if(operation.equals("^")){
+            		num1 = Math.pow(num1, num2);
 		} return num1;
 	}
 }
-                
