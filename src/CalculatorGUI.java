@@ -1,10 +1,11 @@
 /** 
 Author: Holly Mills
 Creation Date: Feb. 14, 2015
-Last Edited: Feb. 22, 2015
-Description: Ver. 4 uses CreateButton class and OrderOfOperations class to simplify code and
-		also uses getActionEvent() to identify button being pressed
-		Can accept multiple inputs and uses order of operations to calculate currect answer
+Last Edited: March 4, 2015
+Description: Uses CreateButton class and OrderOfOperations class to simplify code and
+		also uses getActionEvent() to identify button being pressed.
+		Can accept multiple inputs and uses order of operations to calculate currect answer.
+		Does not allow for negative numbers to be input.
 
  CalculatorApp
     Copyright (C) 2015  Holly Mills
@@ -33,20 +34,14 @@ import java.lang.Math;
 public class CalculatorGUI {
 
     CreateButton one, two, three, four, five, six, seven, 
-	eight, nine, dot, zero, addition, subtract,
-	multiply, divide, equals, clear,
+        eight, nine, dot, zero, addition, subtract,
+        multiply, divide, equals, clear,
     	sqrt, close, open, exp;
-    
-    OrderOfOperations evaluator;
 	
     JTextField displayBox;
-	
-    double num = 0.0;
-    double result = 0.0;
-    boolean squareroot = false;
-    String numHolder = "0";
-    String button = "";
-    String input = "";
+    
+    private String button = "";
+    private String input = "";
     
     DecimalFormat formater = new DecimalFormat("0.##########");
 	
@@ -56,20 +51,19 @@ public class CalculatorGUI {
     }
 
     public void go() {
-	JFrame frame = new JFrame("Calculator");
-	JPanel centerPane = new JPanel();
-	JPanel bottomPane = new JPanel();
+        JFrame frame = new JFrame("Calculator");
+        JPanel centerPane = new JPanel();
+        JPanel bottomPane = new JPanel();
 		 
-	centerPane.setLayout(new GridLayout(5,4));
-	bottomPane.setLayout( new GridLayout(1,1,2,2));
-		
-	displayBox = new JTextField(20);
-	evaluator = new OrderOfOperations();
+        centerPane.setLayout(new GridLayout(5,4));
+        bottomPane.setLayout( new GridLayout(1,1,2,2));
+        
+        displayBox = new JTextField(20);
 
     	sqrt = new CreateButton("sqrt", new OperationButton(), centerPane);
-    	exp = new CreateButton("^", new OperationButton(), centerPane);
-    	open = new CreateButton("(", new OperationButton(), centerPane);
-    	close = new CreateButton(")", new OperationButton(), centerPane);
+    	exp = new CreateButton(" ^ ", new OperationButton(), centerPane);
+    	open = new CreateButton("( ", new OperationButton(), centerPane);
+    	close = new CreateButton(" )", new OperationButton(), centerPane);
     	seven = new CreateButton("7", new NumberButton(), centerPane);
     	eight = new CreateButton("8", new NumberButton(), centerPane);
     	nine = new CreateButton("9", new NumberButton(), centerPane);
@@ -83,69 +77,57 @@ public class CalculatorGUI {
     	three = new CreateButton("3", new NumberButton(), centerPane);
     	multiply = new CreateButton(" * ", new OperationButton(), centerPane);
     	dot = new CreateButton(".", new NumberButton(), centerPane);
-	zero = new CreateButton("0", new NumberButton(), centerPane);
+        zero = new CreateButton("0", new NumberButton(), centerPane);
     	equals = new CreateButton(" = ", new EqualsButton(), centerPane);
     	divide = new CreateButton(" / ", new OperationButton(), centerPane);
-	clear = new CreateButton("clear", new OperationButton(), bottomPane);
+        clear = new CreateButton("clear", new OperationButton(), bottomPane);
 		
-	frame.getContentPane().add(BorderLayout.NORTH, displayBox);
-	frame.getContentPane().add(BorderLayout.CENTER, centerPane);
-	frame.getContentPane().add(BorderLayout.SOUTH, bottomPane);
+        frame.getContentPane().add(BorderLayout.NORTH, displayBox);
+        frame.getContentPane().add(BorderLayout.CENTER, centerPane);
+        frame.getContentPane().add(BorderLayout.SOUTH, bottomPane);
 		
-	frame.setSize(250,300);
-	frame.setVisible(true);
-	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(250,300);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 		
     class NumberButton implements ActionListener {		
         public void actionPerformed(ActionEvent event) {
             button = event.getActionCommand();
-            numHolder = numHolder + button;
             displayBox.setText(displayBox.getText() + button);
-            if (!squareroot)
-                input = input + button;
+            input = input + button;
         }
     }
 	
     class OperationButton implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            num = Double.parseDouble(numHolder);
-            numHolder = "0";
             button = event.getActionCommand();
             
-            if (button == " + "|| button == " - "|| button == " * "|| button == " / "|| button == " ^ "){
-                displayBox.setText(displayBox.getText() + button);
-                input = input + button;
-            } else if (button == "sqrt"){
-                displayBox.setText(displayBox.getText() + "sqrt(");
-                squareroot = true;
-            } else if (button == "("){
-                displayBox.setText(displayBox.getText() + button);
-                input = input + "( "; //extra space makes string readable to OrderOfOperations class
-            } else if (button == "^"){
-                displayBox.setText(displayBox.getText() + button);
-                input = input + " ^ ";
-            } else if (button == ")"){
-                if (squareroot){
-                    num = Math.sqrt(num);
-                    input = input + Double.toString(num);
-                    squareroot = false;
-                }else{
-                    input = input + " )";
-                }
-                displayBox.setText(displayBox.getText() + button);
-            } else{
+            if (button == "clear"){
                 displayBox.setText("");
                 input = "";
+            } else if (button == "sqrt"){
+                displayBox.setText(displayBox.getText() + "sqrt( ");
+                input = input + "sqrt ( "; //extra spaces makes string readable to OrderOfOperations class
+            } else{
+                displayBox.setText(displayBox.getText() + button);
+                input = input + button;
             }
         }
     }
     
     class EqualsButton implements ActionListener {
+        
+        double result;
+        OrderOfOperations evaluator = new OrderOfOperations();
+        
     	public void actionPerformed(ActionEvent event){
-    		button = event.getActionCommand();
-    		result = evaluator.readInput(input);
-    		displayBox.setText(displayBox.getText() + button + formater.format(result));
+            if (evaluator.checkInput(input)){
+                button = event.getActionCommand();
+                result = evaluator.readInput(input);
+                displayBox.setText(displayBox.getText() + button + formater.format(result));
+            } else
+                displayBox.setText(evaluator.getException());
     	}
     }
 }
