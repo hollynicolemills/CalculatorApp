@@ -2,7 +2,7 @@
 import java.util.Stack;
 import java.util.Scanner;
 
-public class OrderOfOperations {
+public class Calculator {
 	private String token = "";
     private String exception = "";
     
@@ -33,19 +33,20 @@ public class OrderOfOperations {
         
         if (open != closed){
             valid = false;
-            exception = "Error: unbalanced parenthesis";
         }
         
         if (numCount <= opCount){
             valid = false;
-            exception = "Error: unbalanced expression";
-        }
-
+        } 
+        
+        if (!valid)
+        	exception = "Error: Invalid Input";
+        
         return valid;
     }
     
 	public double readInput (String exp){
-		Scanner input = new Scanner(exp);
+        Scanner input = new Scanner(exp);
 		Stack<Double> num = new Stack<Double>();
 		Stack<String> op = new Stack<String>();
 		
@@ -85,7 +86,9 @@ public class OrderOfOperations {
 	}
 	
 	private static boolean isNumber (String exp){
-		if (exp.startsWith("0"))
+		if (exp.startsWith("-") && (exp.length() > 1))
+			return true;
+		else if (exp.startsWith("0"))
 			return true;
 		else if (exp.startsWith("1"))
 			return true;
@@ -118,9 +121,10 @@ public class OrderOfOperations {
             return true;
         else if (exp.equals("/"))
             return true;
+		else if (exp.equals("^"))
+	    	return true;
         else
             return false;
-            
     }
 
 	private static boolean hasPrecedence(String op1, String op2)
@@ -142,7 +146,6 @@ public class OrderOfOperations {
     }
  
  	private static double evaluate (String operation, double num2, double num1) {
-		
 		if(operation.equals("+")) {
 			num1 = num1 + num2;
 		} else if(operation.equals("-")){
@@ -151,8 +154,9 @@ public class OrderOfOperations {
 			num1 = num1 * num2;
 		} else if(operation.equals("/")){
 			num1 = num1 / num2;
-        	} else if(operation.equals("^")){
-            		num1 = Math.pow(num1, num2);
+        } else if(operation.equals("^")){
+            num1 = Math.pow(num1, num2);
 		} return num1;
 	}
 }
+                
