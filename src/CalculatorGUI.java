@@ -150,7 +150,7 @@ public class CalculatorGUI {
     	public void actionPerformed(ActionEvent event){
 	    	newEntry = true;
 
-	    	if (evaluator.checkInput(input)){
+	    	if (evaluate.checkInput(input)){
             	button = event.getActionCommand();
             	result = evaluate.readInput(input);
             	displayBox.setText(displayBox.getText() + button + formater.format(result));
