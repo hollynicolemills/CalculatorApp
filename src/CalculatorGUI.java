@@ -1,11 +1,10 @@
 /** 
 Author: Holly Mills
 Creation Date: Feb. 14, 2015
-Last Edited: March 4, 2015
+Last Edited: March 18, 2015
 Description: Uses CreateButton class and OrderOfOperations class to simplify code and
-		also uses getActionEvent() to identify button being pressed.
-		Can accept multiple inputs and uses order of operations to calculate currect answer.
-		Does not allow for negative numbers to be input.
+		also uses getActionEvent() to identify button being pressed
+		Can accept multiple inputs and uses order of operations to calculate currect answer
 
  CalculatorApp
     Copyright (C) 2015  Holly Mills
@@ -25,8 +24,12 @@ Description: Uses CreateButton class and OrderOfOperations class to simplify cod
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton; 
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JFrame;
+import java.awt.GridLayout;
+import java.awt.BorderLayout;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.lang.Math;
@@ -36,13 +39,16 @@ public class CalculatorGUI {
     CreateButton one, two, three, four, five, six, seven, 
         eight, nine, dot, zero, addition, subtract,
         multiply, divide, equals, clear,
-    	sqrt, close, open, exp;
+    	sqrt, close, open, exp, ans, neg;
 	
     JTextField displayBox;
-    
     private String button = "";
+    //The "input" variable holds user input that is readable to the "Calculator" class
     private String input = "";
-    
+    //The variable "newEntry" resets the screen when the user clicks any button after evaluating the expression
+    //It removes the dependency on the "clear" button
+    private boolean newEntry = false;
+    private double result;
     DecimalFormat formater = new DecimalFormat("0.##########");
 	
     public static void main(String[] args) {
@@ -56,7 +62,7 @@ public class CalculatorGUI {
         JPanel bottomPane = new JPanel();
 		 
         centerPane.setLayout(new GridLayout(5,4));
-        bottomPane.setLayout( new GridLayout(1,1,2,2));
+        bottomPane.setLayout( new GridLayout(1,2,2,2));
         
         displayBox = new JTextField(20);
 
@@ -80,6 +86,8 @@ public class CalculatorGUI {
         zero = new CreateButton("0", new NumberButton(), centerPane);
     	equals = new CreateButton(" = ", new EqualsButton(), centerPane);
     	divide = new CreateButton(" / ", new OperationButton(), centerPane);
+    	ans = new CreateButton("ans", new OperationButton(), bottomPane);
+    	neg = new CreateButton("(-)", new OperationButton(), bottomPane);
         clear = new CreateButton("clear", new OperationButton(), bottomPane);
 		
         frame.getContentPane().add(BorderLayout.NORTH, displayBox);
@@ -93,41 +101,61 @@ public class CalculatorGUI {
 		
     class NumberButton implements ActionListener {		
         public void actionPerformed(ActionEvent event) {
-            button = event.getActionCommand();
-            displayBox.setText(displayBox.getText() + button);
-            input = input + button;
+	   
+	    	if (newEntry){
+			displayBox.setText("");
+			newEntry = false;
+			input = "";
+	    	}
+	    
+	    	button = event.getActionCommand();
+        	displayBox.setText(displayBox.getText() + button);
+        	input = input + button;
         }
     }
 	
     class OperationButton implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            button = event.getActionCommand();
+        	double ans = 0.0;
+            button = event.getActionCommand();	
             
-            if (button == "clear"){
-                displayBox.setText("");
-                input = "";
-            } else if (button == "sqrt"){
-                displayBox.setText(displayBox.getText() + "sqrt( ");
-                input = input + "sqrt ( "; //extra spaces makes string readable to OrderOfOperations class
-            } else{
-                displayBox.setText(displayBox.getText() + button);
-                input = input + button;
-            }
+	    	if (newEntry){
+				displayBox.setText("");
+				newEntry = false;
+				input = "";
+			}
+			
+			if (button == "ans"){
+            	displayBox.setText(displayBox.getText() + formater.format(result));
+            	input = input + Double.toString(result);
+	    	}else if (button == "(-)"){
+            	displayBox.setText(displayBox.getText() + "-");
+            	input = input + "-";
+           	}else if (button == "clear"){
+            	displayBox.setText("");
+            	input = "";
+        	}else if (button == "sqrt"){
+           	 	displayBox.setText(displayBox.getText() + "sqrt( ");
+            	input = input + "sqrt ( "; //extra spaces makes string readable to "Calculator" class
+        	}else{
+            	displayBox.setText(displayBox.getText() + button);
+            	input = input + button;
+        	}
         }
     }
     
     class EqualsButton implements ActionListener {
-        
-        double result;
-        OrderOfOperations evaluator = new OrderOfOperations();
+        Calculator evaluate = new Calculator();
         
     	public void actionPerformed(ActionEvent event){
-            if (evaluator.checkInput(input)){
-                button = event.getActionCommand();
-                result = evaluator.readInput(input);
-                displayBox.setText(displayBox.getText() + button + formater.format(result));
-            } else
-                displayBox.setText(evaluator.getException());
+	    	newEntry = true;
+
+	    	if (evaluator.checkInput(input)){
+            	button = event.getActionCommand();
+            	result = evaluate.readInput(input);
+            	displayBox.setText(displayBox.getText() + button + formater.format(result));
+        	} else
+            	displayBox.setText(evaluate.getException());
     	}
     }
 }
