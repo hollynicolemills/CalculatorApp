@@ -37,12 +37,16 @@ public class Calculator {
             valid = false;
             exception = "Error: unbalanced parenthesis";
         }
-        //opCount == 0 accounts for cases like "5 -3" where "-" means negative number
-        //sqrtCount == 0 allows it evalauate sqrt expressions instead of counting it as unbalanced
-        if ((numCount <= opCount || opCount == 0) || sqrtCount == 0){ 
+        
+       if (numCount <= opCount){
             valid = false;
-            exception = "Error: unbalanced operator";
-        } return valid;
+            exception = "Error: too many operators";
+        }  
+
+       if (opCount == 0 && sqrtCount == 0){
+            valid = false;
+            exception = "Error: no operator";
+       }return valid;
     }
     
 	public double readInput (String exp){
