@@ -1,4 +1,4 @@
-
+package com.hollynicolemills;
 import java.util.Stack;
 import java.util.Scanner;
 
@@ -15,6 +15,7 @@ public class Calculator {
         int closed = 0;
         int opCount = 0;
         int numCount = 0;
+        int sqrtCount =0;
         boolean valid = true;
         
         Scanner reader = new Scanner(in);
@@ -29,20 +30,20 @@ public class Calculator {
                 numCount++;
             if (isOperator(token))
                 opCount++;
+            if (token.equals("sqrt"))
+                sqrtCount++;
         }
         
         if (open != closed){
             valid = false;
+            exception = "Error: unbalanced parenthesis";
         }
-        
-        if (numCount <= opCount){
+        //opCount == 0 accounts for cases like "5 -3" where "-" means negative number
+        //sqrtCount == 0 allows it evalauate sqrt expressions instead of counted it as unbalanced
+        if ((numCount <= opCount || opCount == 0) || sqrtCount == 0){ 
             valid = false;
-        } 
-        
-        if (!valid)
-        	exception = "Error: Invalid Input";
-        
-        return valid;
+            exception = "Error: unbalanced operator";
+        } return valid;
     }
     
 	public double readInput (String exp){
